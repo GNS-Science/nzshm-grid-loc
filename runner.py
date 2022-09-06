@@ -4,20 +4,14 @@ from shapely.geometry import Point, Polygon
 from nzshm_grid_loc import nzshm_grid_loc
 from nzshm_grid_loc.nzshm_grid_loc import diff_grids
 from nzshm_grid_loc.grid import Grid
-from nzshm_grid_loc.io import write_grid, load_grid, grid_to_base64, data_from_base64_zip, latlon_from_base64_zip, \
+from nzshm_grid_loc.io import write_grid, load_grid, grid_to_base64, latlon_from_base64_zip, \
     write_attr_grid_to_file, write_attr_grid, load_polygon_file
 from nzshm_grid_loc.geography import Regions
 from nzshm_grid_loc.plot_grid import Plot
 from nzshm_grid_loc.geometry_manipulation import simplify_shape
+from scripts import nz_backarc_01deg_1n
 
-
-grid = Grid\
-    .for_polygon(0.2, Regions.NZ_SMALL.load())\
-    .add_neighbours()\
-    .annotate("backarc", "0")\
-    .annotate("backarc", "1", clip=Regions.BACKARC.load())
-
-write_attr_grid(grid, "backarc2_02deg_1n.csv", ["lon", "lat", "backarc"])
+nz_backarc_01deg_1n()
 
 # nz = Regions.NZ_SMALL.load()
 #
