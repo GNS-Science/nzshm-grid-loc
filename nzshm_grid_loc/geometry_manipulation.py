@@ -1,7 +1,35 @@
-from geopandas import read_file
+from typing import Union, Any
 
+from geopandas import read_file, GeoDataFrame
+
+from shapely.geometry import Polygon, MultiPolygon
 from nzshm_grid_loc.io import gdf_to_wkt_zip, load_polygon_file
 from nzshm_grid_loc.plot_grid import Plot
+
+
+def remove_holes(geom: Union[Polygon, MultiPolygon, GeoDataFrame]) -> Any:
+    if isinstance(geom, Polygon):
+        if geom.interiors:
+            return Polygon(list(geom.exterior.coords))
+        else:
+            return geom
+    elif isinstance(geom, MultiPolygon):
+        return MultiPolygon([remove_holes(poly) for poly in geom.geoms])
+    elif isinstance(geom, GeoDataFrame):
+        geom['geometry'] = [remove_holes(poly) for poly in geom.geometry]
+        return geom
+
+
+def remove_holes_from_nz(nz: GeoDataFrame) -> GeoDataFrame:
+    # remove holes to ensure valid geometry in NZ Small (oops)
+    nz = remove_holes(nz)
+    # merge all polygons into one
+    nz = nz.dissolve()
+    # As merge artifacts, we can have what is visually a hole but it's not actually an "interior" polygon. This happens
+    # around fjords, deltas, etc. Intersect with a giant rectangle to turn the visual holes into "proper" holes
+    nz['geometry'][0] = load_polygon_file('resources/nz_bbox.geojson').geometry[0].intersection(nz.geometry[0])
+    # remove those last holes
+    return remove_holes(nz)
 
 
 def simplify_shape(file_in: str, tolerance=0.01, max_rows=50, visual_check=True) -> None:
