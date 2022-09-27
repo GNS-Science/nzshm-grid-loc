@@ -17,9 +17,47 @@ Scripts to generate and manipulate NZSHM hazard grid locations
 * Free software: GPL-3.0-only
 
 
-## Features
+## Examples
 
-* TODO
+Grid generation:
+
+```python
+# create a NZ grid at 0.1 degree spacing
+nz_grid = Grid.for_polygon(0.1, Regions.NZ_SMALL.load())
+```
+
+Grid operations:
+
+```python
+grid_c = grid_a.union(grid_b)
+grid_d = grid_c.difference(grid_e)
+# set operations also work with GeoDataFrame objects
+grid_f = grid_d.difference(Regions.WLG.load())
+```
+
+Grid plotting:
+```python
+plot = Plot()
+plot.add_geoDataFrame(Regions.NZ.load())
+plot.add_geoDataFrame(Regions.WLG.load())
+plot.add_grid(grid)
+plot.show()
+```
+
+Visual diff:
+
+```python
+# show a visual diff of the hutt and WLG grids
+diff_grids("hutt_0.1.csv", "WLG_0.1.csv")
+```
+
+IO:
+
+```python
+write_grid(nz_grid, "NZ_0.1.csv")
+
+grid = load_grid("NZ_0.1.csv")
+```
 
 ## Credits
 
