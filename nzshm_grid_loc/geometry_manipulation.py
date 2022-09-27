@@ -1,8 +1,8 @@
-from typing import Union, Any
+from typing import Any, Union
 
-from geopandas import read_file, GeoDataFrame
+from geopandas import GeoDataFrame, read_file
+from shapely.geometry import MultiPolygon, Polygon
 
-from shapely.geometry import Polygon, MultiPolygon
 from nzshm_grid_loc.io import gdf_to_wkt_zip, load_polygon_file
 from nzshm_grid_loc.plot_grid import Plot
 
