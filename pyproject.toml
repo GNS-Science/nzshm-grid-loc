@@ -24,7 +24,7 @@ packages = [
 [tool.poetry.dependencies]
 python = ">=3.8,<4.0"
 matplotlib = "^3.5.2"
-geopandas = "^0.11.0"
+geopandas = "^0.12.2"
 pygeos = "^0.12.0"
 nzshm-common = ">=0.4.0"
 
