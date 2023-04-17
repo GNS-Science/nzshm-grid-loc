@@ -1,7 +1,7 @@
 [tool]
 [tool.poetry]
 name = "nzshm-grid-loc"
-version = "0.1.0"
+version = "0.2.0"
 homepage = "https://github.com/GNS-Science/nzshm-grid-loc"
 description = "Scripts to generate and manipulate NZSHM hazard grid locations."
 authors = ["Oakley Jurgens <o.jurgens@gns.cri.nz>"]
