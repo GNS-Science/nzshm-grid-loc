@@ -1,21 +1,22 @@
 #!/usr/bin/env python
 """Tests for `nzshm_grid_loc` package."""
-
-import pytest
-
-
-@pytest.fixture
-def response():
-    """Sample pytest fixture.
-
-    See more at: http://doc.pytest.org/en/latest/fixture.html
-    """
-    # import requests
-    # return requests.get('https://github.com/audreyr/cookiecutter-pypackage')
+from geopandas import GeoDataFrame
 
 
-def test_content(response):
-    """Sample pytest test function with the pytest fixture as an argument."""
-    # from bs4 import BeautifulSoup
-    # assert 'GitHub' in BeautifulSoup(response.content).title.string
-    del response
+def test_main_module_import():
+    import nzshm_grid_loc as ngl
+
+    assert ngl.__name__ == "nzshm_grid_loc"
+
+
+def test_top_level_module_members():
+    import nzshm_grid_loc as ngl
+
+    assert ngl.Regions.NZ_SMALL is not None
+
+
+def test_load_region():
+    import nzshm_grid_loc as ngl
+
+    nzsmall = ngl.Regions.NZ_SMALL.load()
+    assert isinstance(nzsmall, GeoDataFrame)
