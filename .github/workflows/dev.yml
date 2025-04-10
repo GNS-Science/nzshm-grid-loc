@@ -1,10 +1,6 @@
-# This is a basic workflow to help you get started with Actions
-
 name: dev workflow
 
-# Controls when the action will run.
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
   push:
     branches: [ master, main ]
   pull_request:
@@ -13,63 +9,10 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "test"
-  test:
-    # The type of runner that the job will run on
-    strategy:
-      matrix:
-        python-versions: [3.8, 3.9]
-        os: [ubuntu-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-versions }}
-
-      - name: Install and configure Poetry
-        uses: snok/install-poetry@v1
-        with:
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-          installer-parallel: true
-
-      #----------------------------------------------
-      #       load cached venv if cache exists
-      #----------------------------------------------
-      - name: Load cached venv
-        id: cached-poetry-dependencies
-        uses: actions/cache@v3
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
-
-      #----------------------------------------------
-      # install dependencies if cache does not exist
-      #----------------------------------------------
-      - name: Install dependencies
-        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: |
-          poetry install --no-interaction --no-root --with dev --all-extras
-          poetry add tox-gh-actions
-
-      - name: test with tox (uses tox-gh-actions to select correct environment)
-        run: |
-          source $VENV
-          poetry run tox
-
-      - name: list files
-        run: ls -l .
-
-
-      - name: Submit coverage report if this is Linux
-        if: runner.os == 'Linux'
-        uses: codecov/codecov-action@v3
-        with:
-          fail_ci_if_error: false # optional (default = false)
-          verbose: true # optional (default = false)
+  call-test-workflow:
+    uses: GNS-Science/nshm-github-actions/.github/workflows/python-run-tests.yml@feature/create-test-workflow
+    with:
+      operating-systems: "['ubuntu-latest', 'macos-latest']"
+      python-versions: "['3.8', '3.9']"
+    secrets: inherit
