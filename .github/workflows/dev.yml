@@ -15,5 +15,5 @@ jobs:
     with:
       operating-systems: "['ubuntu-latest', 'macos-latest']"
       python-versions: "['3.8', '3.9']"
-      poetry-version: 1.8.5 # Python 3.8 was dropped after this release
+      poetry-version: 1.8.5 # last version of Poetry to support Python 3.8
     secrets: inherit
